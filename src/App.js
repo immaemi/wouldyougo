@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { useState } from 'react';
 import './App.css';
 
 import Login from './views/Login'; 
@@ -6,6 +7,8 @@ import Home from './views/Home';
 
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   return (
     <div className="App">
       <Router>
@@ -13,27 +16,22 @@ function App() {
           <Route
             path='/'
             element={
-              // <RequireAuth redirectTo={'/login'}>
-              <Navigate to='/member'/>
-              // </RequireAuth>
+              <Navigate to='/login'/>
             }
           ></Route>
 
           <Route 
             path='/login'
             element={
-              // <NoRequireAuth redirectTo={'/member'}>
-              <Login />
-              // </NoRequireAuth>
+              <Login setIsLoggedIn = {setIsLoggedIn}/>
             }
           ></Route>
 
           <Route 
             path='/home'
             element={
-              // <RequireAuth redirectTo={'/member'}>
               <Home />
-              // </RequireAuth>
+              /* isLoggedIn ? <Home /> : <Navigate to = '/login' /> */
             }
           ></Route>
         </Routes>

@@ -1,8 +1,16 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import SocialKakao from '../components/SocialKakao'; 
 import './Login.css';
 
-const LoginPage = () => {
+const LoginPage = ({ setIsLoggedIn }) => {
+  const navigate = useNavigate(); // useNavigate 사용
+
+  const handleKakaoLoginSuccess = () => {
+    // 로그인 성공 시 Home 페이지로 이동
+    navigate('/home');
+  };
+
   return (
     <div className="login-container">
       <div className="left-panel">
@@ -15,8 +23,8 @@ const LoginPage = () => {
             <div className="profile-icon"></div> 
             <h1>너도 갈래?</h1>
           </div>
-          <div className="button-container"> 
-            <SocialKakao /> 
+          <div className="button-container">
+            <SocialKakao setIsLoggedIn={setIsLoggedIn} onSuccess={handleKakaoLoginSuccess} /> {/* 성공 시 함수 전달 */}
           </div>
         </div>
       </div>

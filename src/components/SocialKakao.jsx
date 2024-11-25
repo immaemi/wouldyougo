@@ -1,16 +1,34 @@
-import React from 'react';
-import kakaoLoginImage from '../assets/images/kakao-login.png'; // 이미지 경로 수정
+import React, { useEffect } from 'react';
+import kakaoLoginImage from '../assets/images/kakao-login.png';
+import { useNavigate } from 'react-router-dom';
 
-const SocialKakao = () => {
+const SocialKakao = ({ setIsLoggedIn }) => { // setIsLoggedIn을 props로 받음
   const Rest_api_key = '637ce93b8d95d506383414edee1a44b3'; // 카카오 REST API 키
-  const redirect_uri = 'http://localhost:3000/auth'; // 리다이렉트 URI
+  const redirect_uri = 'http://localhost:3000/home'; // 리다이렉트 URI
 
-  // OAuth 요청 URL 생성
-  const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`;
+  const navigate = useNavigate(); // useNavigate를 사용하여 navigate 함수 가져오기
 
-  // 카카오 로그인 이미지 클릭 시 로그인 페이지로 리다이렉트
+  // Kakao 초기화
+  useEffect(() => {
+    if (!window.Kakao.isInitialized()) {
+      window.Kakao.init(Rest_api_key); // 초기화
+      console.log('Kakao 초기화 성공');
+    }
+  }, [Rest_api_key]);
+
+  // 카카오 로그인 처리
   const handleLogin = () => {
-    window.location.href = kakaoURL;
+    window.Kakao.Auth.login({
+      success: function(authObj) {
+        console.log('로그인 성공', authObj);
+        setIsLoggedIn(true); // 로그인 성공 시 isLoggedIn 상태 업데이트
+        navigate('/home'); // 로그인 성공 후 리다이렉트
+      },
+      fail: function(err) {
+        console.error('로그인 실패', err);
+        alert('로그인에 실패했습니다.');
+      }
+    });
   };
 
   return (
