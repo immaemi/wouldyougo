@@ -2,32 +2,32 @@ import React, { useEffect } from 'react';
 import kakaoLoginImage from '../assets/images/kakao-login.png';
 import { useNavigate } from 'react-router-dom';
 
-const SocialKakao = ({ setIsLoggedIn }) => { // setIsLoggedIn을 props로 받음
-  const Rest_api_key = '637ce93b8d95d506383414edee1a44b3'; // 카카오 REST API 키
-  const redirect_uri = 'http://localhost:3000/home'; // 리다이렉트 URI
+const SocialKakao = ({ setIsLoggedIn }) => {
+  const REST_API_KEY = '637ce93b8d95d506383414edee1a44b3';
+  const REDIRECT_URI = 'http://localhost:3000/auth';
+  const navigate = useNavigate();
 
-  const navigate = useNavigate(); // useNavigate를 사용하여 navigate 함수 가져오기
-
-  // Kakao 초기화
   useEffect(() => {
-    if (!window.Kakao.isInitialized()) {
-      window.Kakao.init(Rest_api_key); // 초기화
-      console.log('Kakao 초기화 성공');
-    }
-  }, [Rest_api_key]);
-
-  // 카카오 로그인 처리
-  const handleLogin = () => {
-    window.Kakao.Auth.login({
-      success: function(authObj) {
-        console.log('로그인 성공', authObj);
-        setIsLoggedIn(true); // 로그인 성공 시 isLoggedIn 상태 업데이트
-        navigate('/home'); // 로그인 성공 후 리다이렉트
-      },
-      fail: function(err) {
-        console.error('로그인 실패', err);
-        alert('로그인에 실패했습니다.');
+    const script = document.createElement('script');
+    script.src = 'https://t1.kakaocdn.net/kakao_js_sdk/2.5.0/kakao.min.js';
+    script.integrity = 'sha384-kYPsUbBPlktXsY6/oNHSUDZoTX6+YI51f63jCPEIPFP09ttByAdxd2mEjKuhdqn4';
+    script.crossOrigin = 'anonymous';
+    script.onload = () => {
+      if (!window.Kakao.isInitialized()) {
+        window.Kakao.init(REST_API_KEY);
+        console.log('Kakao 초기화 성공');
       }
+    };
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  const handleLogin = () => {
+    window.Kakao.Auth.authorize({
+      redirectUri: REDIRECT_URI,
     });
   };
 

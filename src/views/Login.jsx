@@ -7,7 +7,6 @@ const LoginPage = ({ setIsLoggedIn }) => {
   const navigate = useNavigate(); // useNavigate 사용
 
   const handleKakaoLoginSuccess = () => {
-    // 로그인 성공 시 Home 페이지로 이동
     navigate('/home');
   };
 
